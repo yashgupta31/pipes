@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import './Box.css';
 
-const Box = ({ coordinates, imageSize, index }) => {
+const Box = ({ coordinates, imageSize, index, setCount }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   // Image's original resolution (actual intrinsic size)
-  const originalWidth = 3468;
-  const originalHeight = 4624;
+  const originalWidth = 1200; 
+  const originalHeight = 1600;
 
   // Scaling factor
-  const scaleX = imageSize.width / originalWidth;
-  const scaleY = imageSize.height / originalHeight;
+  // const scaleX = imageSize.width / originalWidth;
+  // const scaleY = imageSize.height / originalHeight;
+  const scaleX = imageSize.width > 0 ? imageSize.width / originalWidth : 1;
+const scaleY = imageSize.height > 0 ? imageSize.height / originalHeight : 1;
 
   // Calculate box position
   const left = Math.min(...coordinates.map((c) => c[0])) * scaleX;
@@ -17,22 +20,11 @@ const Box = ({ coordinates, imageSize, index }) => {
   const right = Math.max(...coordinates.map((c) => c[0])) * scaleX;
   const bottom = Math.max(...coordinates.map((c) => c[1])) * scaleY;
 
-  const width = right - left;
-  const height = bottom - top;
+  // const width = right - left;
+  // const height = bottom - top;
+  const width = right !== left? right - left : 23;
+  const height = right !== left? bottom - top: 23;
 
-//   const boxStyle = {
-//     position: "absolute",
-//     left: `${left}px`,
-//     top: `${top}px`,
-//     width: `${width}px`,
-//     height: `${height}px`,
-//     border: "2px solid blue",
-//     backgroundColor: "rgba(0, 0, 255, 0.2)",
-//     cursor: "pointer",
-//     opacity: isVisible ? 1 : 0, // Hide without removing from DOM
-//     pointerEvents: isVisible ? "auto" : "none", // Allow clicks when hidden
-//     borderRadius: '50%'
-//   };
 const boxStyle = {
     position: "absolute",
     left: `${left}px`,
@@ -48,8 +40,17 @@ const boxStyle = {
     justifyContent: 'center'
   };
 
+  const handleClick = () => {
+    setIsVisible(!isVisible);
+    setCount((prev) => (isVisible ? prev - 1 : prev + 1));
+
+  };
+
+  
+
   return (
-  <div style={boxStyle} onClick={() => setIsVisible(!isVisible)}>
+    
+  <div style={boxStyle} onClick={handleClick} className="each-pipes">
     {isVisible && <span style={{fontSize: '0.7rem'}}>{index + 1}</span>}
   </div>)
 };
