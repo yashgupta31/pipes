@@ -1,58 +1,102 @@
-import React, { useState } from "react";
-import './Box.css';
+import React, { useEffect, useState } from "react";
+import "./Box.css";
 
-const Box = ({ coordinates, imageSize, index, setCount }) => {
-  const [isVisible, setIsVisible] = useState(true);
+const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeColor, setBoxes, cumulativeSum}) => {
+  const [isRemoved, setIsRemoved] = useState(false);
+  if (isRemoved) return null; // 🔥 Completely remove from UI when clicked
 
   // Image's original resolution (actual intrinsic size)
-  const originalWidth = 1200; 
-  const originalHeight = 1600;
+  const originalWidth = 1271;
+  const originalHeight = 1324;
 
   // Scaling factor
-  // const scaleX = imageSize.width / originalWidth;
-  // const scaleY = imageSize.height / originalHeight;
   const scaleX = imageSize.width > 0 ? imageSize.width / originalWidth : 1;
-const scaleY = imageSize.height > 0 ? imageSize.height / originalHeight : 1;
+  const scaleY = imageSize.height > 0 ? imageSize.height / originalHeight : 1;
 
-  // Calculate box position
-  const left = Math.min(...coordinates.map((c) => c[0])) * scaleX;
-  const top = Math.min(...coordinates.map((c) => c[1])) * scaleY;
-  const right = Math.max(...coordinates.map((c) => c[0])) * scaleX;
-  const bottom = Math.max(...coordinates.map((c) => c[1])) * scaleY;
+  // Extract coordinates
+  const x1 = coordinates[0] * scaleX;
+  const y1 = coordinates[1] * scaleY;
+  const x2 = coordinates[2] * scaleX;
+  const y2 = coordinates[3] * scaleY;
+  const pipeCount = coordinates[4]; // Number of pipes
 
-  // const width = right - left;
-  // const height = bottom - top;
-  const width = right !== left? right - left : 23;
-  const height = right !== left? bottom - top: 23;
 
-const boxStyle = {
+  // Calculate dimensions
+  const left = x1;
+  const top = y1;
+  const width = x2 - x1 !== 0 ? x2 - x1 : 23;
+  const height = y2 - y1 !== 0 ? y2 - y1 : 23;
+
+  const borderColor =
+    pipeCount === 1
+      ? "orange"
+      : pipeCount === 2
+      ? "blue"
+      : pipeCount === 3
+      ? "red"
+      : "green";
+
+  const boxStyle = {
     position: "absolute",
     left: `${left}px`,
     top: `${top}px`,
     width: `${width}px`,
     height: `${height}px`,
-    border: isVisible ? "2px solid blue" : "none",
-    backgroundColor: isVisible ? "rgba(0, 0, 255, 0.2)" : "transparent",
+    border: `2px solid ${borderColor}`,
+    backgroundColor: pipeCount==1? "rgba(146, 85, 11, 0.2)": pipeCount == 2? "rgba(138, 138, 212, 0.2)": pipeCount == 3? "rgba(253, 0, 0, 0.28)": "rgba(0, 253, 13, 0.21)",
     cursor: "pointer",
-    borderRadius: '50%', 
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: 'white'
   };
 
-  const handleClick = () => {
-    setIsVisible(!isVisible);
-    setCount((prev) => (isVisible ? prev - 1 : prev + 1));
 
+  // const handleClick = () => {
+  //   setIsRemoved(true); // Remove the element from UI
+  //   setCount((prev) => prev - pipeCount);
+  //   setTypeCount((prev) => ({
+  //     ...prev,
+  //     [pipeCount]: prev[pipeCount] - 1,
+  //   }));
+  
+  //   console.log("Removing index:", index);
+    
+  //   setBoxes((prevBoxes) => {
+  //     const newBoxes = [...prevBoxes];
+  //     newBoxes.splice(index, 1); // Correctly remove only the clicked element
+  //     return newBoxes;
+  //   });
+  
+  //   setPipeColor(pipeCount);
+  // };
+
+  const handleClick = () => {
+    setIsRemoved(true); // Remove the element from UI
+    setCount((prev) => prev - pipeCount);
+    setTypeCount((prev) => ({
+      ...prev,
+      [pipeCount]: prev[pipeCount] - 1,
+    }));
+  
+    console.log("Removing index:", index);
+  
+    // Filter out the box at the clicked index
+    setBoxes((prevBoxes) => prevBoxes.filter((_, i) => i !== index));
+  
+    setPipeColor(pipeCount);
   };
 
   
 
+
   return (
-    
-  <div style={boxStyle} onClick={handleClick} className="each-pipes">
-    {isVisible && <span style={{fontSize: '0.7rem'}}>{index + 1}</span>}
-  </div>)
+    <div style={boxStyle} onClick={handleClick} className="each-pipes">
+      <span style={{ fontSize: "1.4rem", color: "black" }}>{cumulativeSum}</span>
+    </div>
+  );
 };
 
 export default Box;
+
