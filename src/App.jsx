@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import './App.css'
 import Box from "./Box"; // Your Box component
 import logo from './assets/logo.png'
 import domtoimage from 'dom-to-image-more';
@@ -4096,32 +4097,6 @@ const App = () => {
 // };
 
 
-// const downloadImage = () => {
-//   const element = document.getElementById("captureArea");
-//   const captureButton = document.getElementById("captureButton");
-//   const pipeSizeButton = document.getElementById("pipeSizeButton");
-
-//   // Hide buttons before capturing
-//   if (captureButton) captureButton.style.display = "none";
-//   if (pipeSizeButton) pipeSizeButton.style.display = "none";
-
-//   html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
-//     .then((canvas) => {
-//       const dataUrl = canvas.toDataURL("image/png");
-//       const link = document.createElement("a");
-//       link.href = dataUrl;
-//       link.download = "downloaded-image.png";
-//       link.click();
-//     })
-//     .catch((error) => console.error("Error generating image:", error))
-//     .finally(() => {
-//       // Restore button visibility
-//       if (captureButton) captureButton.style.display = "flex";
-//       if (pipeSizeButton) pipeSizeButton.style.display = "flex";
-//     });
-// };
-
-// --------download in pdf-----------
 const downloadImage = () => {
   const element = document.getElementById("captureArea");
   const captureButton = document.getElementById("captureButton");
@@ -4133,23 +4108,49 @@ const downloadImage = () => {
 
   html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
     .then((canvas) => {
-      // Create a new jsPDF instance
-      const pdf = new jsPDF();
-
-      // Add the captured image (canvas) to the PDF
-      const imgData = canvas.toDataURL("image/png");
-      pdf.addImage(imgData, "JPEG", 10, 10, 180, 160); // Adjust positioning and size as needed
-
-      // Save the PDF
-      pdf.save("downloaded-file.pdf"); 
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "downloaded-image.png";
+      link.click();
     })
-    .catch((error) => console.error("Error generating PDF:", error))
+    .catch((error) => console.error("Error generating image:", error))
     .finally(() => {
       // Restore button visibility
       if (captureButton) captureButton.style.display = "flex";
       if (pipeSizeButton) pipeSizeButton.style.display = "flex";
     });
 };
+
+// --------download in pdf-----------
+// const downloadImage = () => {
+//   const element = document.getElementById("captureArea");
+//   const captureButton = document.getElementById("captureButton");
+//   const pipeSizeButton = document.getElementById("pipeSizeButton");
+
+//   // Hide buttons before capturing
+//   if (captureButton) captureButton.style.display = "none";
+//   if (pipeSizeButton) pipeSizeButton.style.display = "none";
+
+//   html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
+//     .then((canvas) => {
+//       // Create a new jsPDF instance
+//       const pdf = new jsPDF();
+
+//       // Add the captured image (canvas) to the PDF
+//       const imgData = canvas.toDataURL("image/png");
+//       pdf.addImage(imgData, "JPEG", 10, 10, 180, 160); // Adjust positioning and size as needed
+
+//       // Save the PDF
+//       pdf.save("downloaded-file.pdf"); 
+//     })
+//     .catch((error) => console.error("Error generating PDF:", error))
+//     .finally(() => {
+//       // Restore button visibility
+//       if (captureButton) captureButton.style.display = "flex";
+//       if (pipeSizeButton) pipeSizeButton.style.display = "flex";
+//     });
+// };
 
 
 
@@ -4172,71 +4173,62 @@ const downloadImage = () => {
   // console.log(typeCount)
   let cumulativeSum= 0;
   return (
-    <div id="captureArea">
+    <div id="captureArea" >
       {/* <div> */}
-      <div style={{padding: '0.3rem 1.5rem', height: '10rem', display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between', backgroundColor: 'black'}}>
-        <div style={{color: 'white', display: 'flex', flexDirection: 'column'}}>
+      <div style={{padding: '0.3rem 1rem',  display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', justifyContent: 'space-between', backgroundColor: 'black'}}>
+        <div className="pipecount-date-container" style={{color: 'white', display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between'}}>
         <h2
-          style={{
-            fontSize: '3rem',
-            marginBottom: '1rem'
-          }}
-        >
+        className="pipe-count">
           Total Pipes - {count}
         </h2>
 
-        <span style={{fontSize: '1.7rem'}}>
+        <span className="capture-date" >
   Date - {new Date("2025-03-06T12:42:31.864629").toLocaleString()}
 </span>
         </div>
 
-        <div style={{display: 'flex', flexDirection: 'column', fontSize: '1.3rem', padding: '1rem'}}>
-        <div style={{ display: 'flex', flexDirection: 'column', fontSize: '1.3rem', padding: '1rem' }}>
+        {/* <div style={{display: 'flex', flexDirection: 'column', fontSize: '1.3rem', padding: '1rem'}}> */}
+        <div className="type-wise-count" style={{ display: 'flex', flexWrap: 'wrap', padding: '0.5rem' }}>
   {Object.entries(typeCount).map(([pipeType, quantity]) =>
     quantity > 0 ? (
-      <span key={pipeType} style={{color: 'white', fontSize: '1.8rem'}}>
+      <span className="each-type-count" key={pipeType} style={{color: 'white',  backgroundColor: 'grey', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid black'}}>
         {pipeType}× pipes: {pipeType} × {quantity} = {pipeType * quantity}
       </span>
     ) : null
   )}
 </div>
-          {/* <span>1× pipes: 1 × quantity = 0</span>
-          <span>2× pipes: 2 × quantity = 0</span>
-          <span>3× pipes: 3 × quantity = 0</span>
-          <span>4× pipes: 4 × quantity = 0</span> */}
-        </div>
+        {/* </div> */}
 
           </div>
-      <div style={{ position: "relative", width: "100%" }}>
-
-        
+      <div style={{ position: "relative", width: "100%"}}>
 
         <div>
 
         </div>
 
-          <div style={{position: "fixed",bottom: '2rem', right: '2rem', padding: '0.4rem', display: 'flex', zIndex: '999'}}>
+          {/* <div style={{position: "fixed",bottom: '2rem', right: '2rem', padding: '0.4rem', display: 'flex', zIndex: '999'}}> */}
           
 
           {/* --------manual pipe size selector-------- */}
-          <div id="pipeSizeButton" style={{display: 'flex',  alignItems: 'center', justifyContent: 'space-evenly', width: '12rem',height: '3rem'}}>
-            <div onClick={()=> setPipeColor(1)} style={{width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'orange', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>1</div>
-            <div onClick={()=> setPipeColor(2)} style={{width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>2</div>
-            <div onClick={()=> setPipeColor(3)} style={{width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'red', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>3</div>
-            <div onClick={()=> setPipeColor(4)} style={{width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'green', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>4</div>
-          </div>
-
-          {/* --------capture button----- */}
-        <div id="captureButton" style={{backgroundColor: 'red', height: '3rem', width: '3rem', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}
+          <div id="pipeSizeButton" style={{display: 'flex',  alignItems: 'center', justifyContent: 'space-evenly', width: '14rem',height: '3rem', position: "fixed", bottom: '2rem', right: '2rem',  zIndex: '999'}}>
+            <div className="each-pipesizeButton" onClick={()=> setPipeColor(1)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'orange', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>1</div>
+            <div className="each-pipesizeButton" onClick={()=> setPipeColor(2)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>2</div>
+            <div className="each-pipesizeButton" onClick={()=> setPipeColor(3)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'red', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>3</div>
+            <div className="each-pipesizeButton" onClick={()=> setPipeColor(4)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'green', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>4</div>
+            <div id="captureButton" style={{backgroundColor: 'red', height: '3rem', width: '3rem', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}
         onClick={downloadImage}
         >
           <FaCamera /></div>
           </div>
+
+          {/* --------capture button----- */}
+        
+          {/* </div> */}
           {/* </div> */}
 
 <img
   ref={imageRef}
-src={pipes}
+src={'https://alvision-count.s3.ap-south-1.amazonaws.com/count/DrawTest/original/2025/03/original_9a470183-4736-456e-a0ba-436a11dc8825.png'}
 style={{ width: "100%", display: "block" }}
   alt="Pipes"
   onClick={handleImageClick}
@@ -4270,8 +4262,8 @@ style={{ width: "100%", display: "block" }}
       </div>
 
       {/* --------logo--------- */}
-      <div style={{width: '100%', height: '8rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <img src={logo} style={{width: '20rem'}} alt="alluvium logo" />
+      <div style={{width: '100%', height: '4rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <img className="logo" src={logo} alt="alluvium logo" />
       </div>
     </div>
   );

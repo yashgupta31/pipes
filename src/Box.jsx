@@ -93,7 +93,7 @@ const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeCol
 
   return (
     <div style={boxStyle} onClick={handleClick} className="each-pipes">
-      <span style={{ fontSize: "1.4rem", color: "black" }}>{cumulativeSum}</span>
+      <span style={{ color: "black" }}>{cumulativeSum}</span>
     </div>
   );
 };
