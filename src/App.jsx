@@ -4097,6 +4097,31 @@ const App = () => {
 // };
 
 
+// const downloadImage = () => {
+//   const element = document.getElementById("captureArea");
+//   const captureButton = document.getElementById("captureButton");
+//   const pipeSizeButton = document.getElementById("pipeSizeButton");
+
+//   // Hide buttons before capturing
+//   if (captureButton) captureButton.style.display = "none";
+//   if (pipeSizeButton) pipeSizeButton.style.display = "none";
+
+//   html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
+//     .then((canvas) => {
+//       const dataUrl = canvas.toDataURL("image/png");
+//       const link = document.createElement("a");
+//       link.href = dataUrl;
+//       link.download = "downloaded-image.png";
+//       link.click();
+//     })
+//     .catch((error) => console.error("Error generating image:", error))
+//     .finally(() => {
+//       // Restore button visibility
+//       if (captureButton) captureButton.style.display = "flex";
+//       if (pipeSizeButton) pipeSizeButton.style.display = "flex";
+//     });
+// };
+
 const downloadImage = () => {
   const element = document.getElementById("captureArea");
   const captureButton = document.getElementById("captureButton");
@@ -4106,9 +4131,15 @@ const downloadImage = () => {
   if (captureButton) captureButton.style.display = "none";
   if (pipeSizeButton) pipeSizeButton.style.display = "none";
 
-  html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
+  html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2, scrollX: 0, scrollY: 0 })
     .then((canvas) => {
       const dataUrl = canvas.toDataURL("image/png");
+
+      // Open the image in a new tab instead of auto-downloading
+      const newTab = window.open();
+      newTab.document.write('<img src="' + dataUrl + '" />');
+
+      // If you still want the download, keep this part
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = "downloaded-image.png";
@@ -4172,6 +4203,8 @@ const downloadImage = () => {
   }, [boxes]); // Runs whenever `boxes` changes
   // console.log(typeCount)
   let cumulativeSum= 0;
+
+  
   return (
     <div id="captureArea" >
       {/* <div> */}
@@ -4228,7 +4261,7 @@ const downloadImage = () => {
 
 <img
   ref={imageRef}
-src={'https://alvision-count.s3.ap-south-1.amazonaws.com/count/DrawTest/original/2025/03/original_9a470183-4736-456e-a0ba-436a11dc8825.png'}
+src={"https://alvision-count.s3.ap-south-1.amazonaws.com/count/DrawTest/original/2025/03/original_9a470183-4736-456e-a0ba-436a11dc8825.png"}
 style={{ width: "100%", display: "block" }}
   alt="Pipes"
   onClick={handleImageClick}
