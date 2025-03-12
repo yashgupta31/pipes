@@ -4011,6 +4011,7 @@ const App = () => {
   ])
 
   // const [uniqueImageUrl, setUniqueImageUrl] = useState("");
+  // const [resize, setResize]= useState(false)
   
   const [count, setCount] = useState(2063);  // Set initial count based on existing boxes
   const [typeCount, setTypeCount]= useState({1: 0, 2: 0, 3: 0, 4: 0, 5: 0})
@@ -4364,7 +4365,7 @@ const downloadImage = async () => {
   return (
     <div id="captureArea" >
       {/* <div> */}
-      <div style={{padding: '0.3rem 1rem',  display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', justifyContent: 'space-between', backgroundColor: 'white'}}>
+      <div style={{padding: '0.3rem 1rem',  display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', justifyContent: 'space-between', backgroundColor: 'black'}}>
         <div className="pipecount-date-container" style={{color: 'white', display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between'}}>
         <h2
         className="pipe-count">
@@ -4400,6 +4401,8 @@ const downloadImage = async () => {
 
           {/* --------manual pipe size selector-------- */}
           <div id="pipeSizeButton" style={{display: 'flex',  alignItems: 'center', justifyContent: 'space-evenly', width: '17rem',height: '3rem', position: "fixed", bottom: '2rem', right: '2rem',  zIndex: '999'}}>
+          {/* <div className="each-pipesizeButton" onClick={()=> setResize(!resize)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'orange', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>R</div> */}
+
             <div className="each-pipesizeButton" onClick={()=> setPipeColor(1)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'orange', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>1</div>
             <div className="each-pipesizeButton" onClick={()=> setPipeColor(2)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>2</div>
             <div className="each-pipesizeButton" onClick={()=> setPipeColor(3)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'red', fontSize: '1.2rem', borderRadius: '50%', cursor: 'pointer'}}>3</div>
@@ -4452,6 +4455,7 @@ style={{ width: "100%", display: "block" }}
               setBoxes={setBoxes}
               setPipeColor={setPipeColor}
               cumulativeSum={cumulativeSum}
+              // resize={resize}
             />)
           })}  
         </div>

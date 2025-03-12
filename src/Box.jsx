@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Box.css";
 
-const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeColor, setBoxes, cumulativeSum}) => {
+const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeColor, setBoxes, cumulativeSum, resize}) => {
   const [isRemoved, setIsRemoved] = useState(false);
   if (isRemoved) return null; // 🔥 Completely remove from UI when clicked
 
@@ -85,9 +85,11 @@ const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeCol
     console.log("Removing index:", index);
   
     // Filter out the box at the clicked index
+    
     setBoxes((prevBoxes) => prevBoxes.filter((_, i) => i !== index));
   
     setPipeColor(pipeCount);
+
   };
 
   
