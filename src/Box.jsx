@@ -34,7 +34,9 @@ const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeCol
       ? "blue"
       : pipeCount === 3
       ? "red"
-      : "green";
+      :pipeCount === 4
+      ? "green":
+      'purple'
 
   const boxStyle = {
     position: "absolute",
@@ -43,7 +45,7 @@ const Box = ({ coordinates, imageSize, index, setCount, setTypeCount, setPipeCol
     width: `${width}px`,
     height: `${height}px`,
     border: `2px solid ${borderColor}`,
-    backgroundColor: pipeCount==1? "rgba(146, 85, 11, 0.2)": pipeCount == 2? "rgba(138, 138, 212, 0.2)": pipeCount == 3? "rgba(253, 0, 0, 0.28)": "rgba(0, 253, 13, 0.21)",
+    backgroundColor: pipeCount==1? "rgba(146, 85, 11, 0.2)": pipeCount == 2? "rgba(138, 138, 212, 0.2)": pipeCount == 3? "rgba(253, 0, 0, 0.28)": pipeCount == 4? "rgba(0, 253, 13, 0.21)": "rgba(223, 0, 253, 0.21)",
     cursor: "pointer",
     borderRadius: "50%",
     display: "flex",
