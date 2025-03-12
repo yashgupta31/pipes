@@ -357,35 +357,30 @@ const App = () => {
 // };
 
 
-const downloadImage = () => {
-  const element = document.getElementById("captureArea");
-  const captureButton = document.getElementById("captureButton");
-  const pipeSizeButton = document.getElementById("pipeSizeButton");
+const downloadImage = async () => {
+  const element = document.body; // Capture entire page
 
-  // Hide buttons before capturing
-  if (captureButton) captureButton.style.display = "none";
-  if (pipeSizeButton) pipeSizeButton.style.display = "none";
+  // Ensure images have crossOrigin="anonymous"
+  document.querySelectorAll("img").forEach((img) => {
+    img.crossOrigin = "anonymous";
+  });
 
-  setTimeout(() => {
-    html2canvas(element, {
-      useCORS: true,  // Allow cross-origin images
-      backgroundColor: "white",
-      scale: 2,  // Increase scale for better quality
-    })
-      .then((canvas) => {
-        const dataUrl = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = "downloaded-image.png";
-        link.click();
-      })
-      .catch((error) => console.error("Error generating image:", error))
-      .finally(() => {
-        // Restore button visibility
-        if (captureButton) captureButton.style.display = "flex";
-        if (pipeSizeButton) pipeSizeButton.style.display = "flex";
-      });
-  }, 300); // Small delay to allow rendering
+  const canvas = await html2canvas(element, {
+    useCORS: true,  // Allows cross-origin images
+    allowTaint: true, // Allows tainted (cross-origin) images
+    logging: false,
+    scale: 2, // Improves image quality
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+
+  // Create a download link
+  const link = document.createElement("a");
+  link.href = imgData;
+  link.download = "screenshot.png";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 
