@@ -299,6 +299,63 @@ const App = () => {
 // };
 
 // --------------------------------------------------
+// ------------blob-------------- working fine locally-------
+// const downloadImage = () => {
+//   const element = document.getElementById("captureArea");
+//   const captureButton = document.getElementById("captureButton");
+//   const pipeSizeButton = document.getElementById("pipeSizeButton");
+
+//   // Hide buttons before capturing
+//   if (captureButton) captureButton.style.display = "none";
+//   if (pipeSizeButton) pipeSizeButton.style.display = "none";
+
+//   html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
+//     .then((canvas) => {
+//       canvas.toBlob((blob) => {
+//         if (blob) {
+//           const url = URL.createObjectURL(blob);
+//           const link = document.createElement("a");
+//           link.href = url;
+//           link.download = "downloaded-image.png";
+//           document.body.appendChild(link);
+//           link.click();
+//           document.body.removeChild(link);
+//           URL.revokeObjectURL(url); // Clean up memory
+//         }
+//       }, "image/png");
+//     })
+//     .catch((error) => console.error("Error generating image:", error))
+//     .finally(() => {
+//       // Restore button visibility
+//       if (captureButton) captureButton.style.display = "flex";
+//       if (pipeSizeButton) pipeSizeButton.style.display = "flex";
+//     });
+// };
+// --------------------------------------------------------
+
+// // Direct download approach using the original URL
+// const downloadImage = () => {
+//   try {
+//     // Extract filename from URL
+//     let imageUrl= "https://alvision-count.s3.ap-south-1.amazonaws.com/count/DrawTest/original/2025/03/original_9a470183-4736-456e-a0ba-436a11dc8825.png";
+//     const urlParts = imageUrl.split('/');
+//     const filename = urlParts[urlParts.length - 1] || 'image.png';
+    
+//     // Create an anchor element and trigger download
+//     const link = document.createElement('a');
+//     link.href = imageUrl;
+//     link.download = filename;
+//     link.rel = "noopener noreferrer";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+    
+//   } catch (err) {
+//     console.error("Error initiating download:", err);
+//     // setError("Download failed. Try right-click and 'Save Image As' instead.");
+//   }
+// };
+
 
 const downloadImage = () => {
   const element = document.getElementById("captureArea");
@@ -309,29 +366,27 @@ const downloadImage = () => {
   if (captureButton) captureButton.style.display = "none";
   if (pipeSizeButton) pipeSizeButton.style.display = "none";
 
-  html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
-    .then((canvas) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "downloaded-image.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url); // Clean up memory
-        }
-      }, "image/png");
+  setTimeout(() => {
+    html2canvas(element, {
+      useCORS: true,  // Allow cross-origin images
+      backgroundColor: "white",
+      scale: 2,  // Increase scale for better quality
     })
-    .catch((error) => console.error("Error generating image:", error))
-    .finally(() => {
-      // Restore button visibility
-      if (captureButton) captureButton.style.display = "flex";
-      if (pipeSizeButton) pipeSizeButton.style.display = "flex";
-    });
+      .then((canvas) => {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = "downloaded-image.png";
+        link.click();
+      })
+      .catch((error) => console.error("Error generating image:", error))
+      .finally(() => {
+        // Restore button visibility
+        if (captureButton) captureButton.style.display = "flex";
+        if (pipeSizeButton) pipeSizeButton.style.display = "flex";
+      });
+  }, 300); // Small delay to allow rendering
 };
-
 
 
 
