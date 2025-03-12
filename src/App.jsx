@@ -4266,21 +4266,33 @@ const waitForImagesToLoad = () => {
 const downloadImage = async () => {
   await waitForImagesToLoad(); // Ensure all images are loaded
 
-  const element = document.getElementById('captureArea'); // Capture entire page
+  const element = document.getElementById("captureArea"); // Capture entire page
+  const captureButton = document.getElementById("captureButton"); // Capture button reference
+  const pipeSizeButton = document.getElementById("pipeSizeButton");
 
+  // Hide the button before capturing
+  captureButton.style.display = "none";
+  pipeSizeButton.style.display= "none";
+
+  // Ensure CORS compliance for external images
   document.querySelectorAll("img").forEach((img) => {
     if (!img.src.includes(window.location.origin)) {
       img.crossOrigin = "anonymous";
     }
   });
 
+  // Capture screenshot
   const canvas = await html2canvas(element, {
     useCORS: true,
     allowTaint: true,
-    scale: 2,
+    scale: 0.8,
   });
 
   const imgData = canvas.toDataURL("image/png");
+
+  // Restore the button after capturing
+  captureButton.style.display = "flex";
+  pipeSizeButton.style.display = "flex";
 
   // Create a download link
   const link = document.createElement("a");
@@ -4290,7 +4302,6 @@ const downloadImage = async () => {
   link.click();
   document.body.removeChild(link);
 };
-
 
 
 
