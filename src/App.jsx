@@ -539,6 +539,7 @@ ref={imageRef}
 style={{ width: "100%", display: "block" }}
   alt="Pipes"
   onClick={handleImageClick}
+  crossOrigin="anonymous"
   // onLoad={() => {
   //   if (imageRef.current) {
   //     setImageSize({
