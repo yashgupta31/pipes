@@ -298,6 +298,40 @@ const App = () => {
 //     });
 // };
 
+// --------------------------------------------------
+
+const downloadImage = () => {
+  const element = document.getElementById("captureArea");
+  const captureButton = document.getElementById("captureButton");
+  const pipeSizeButton = document.getElementById("pipeSizeButton");
+
+  // Hide buttons before capturing
+  if (captureButton) captureButton.style.display = "none";
+  if (pipeSizeButton) pipeSizeButton.style.display = "none";
+
+  html2canvas(element, { useCORS: true, backgroundColor: "white", scale: 2 })
+    .then((canvas) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "downloaded-image.png";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url); // Clean up memory
+        }
+      }, "image/png");
+    })
+    .catch((error) => console.error("Error generating image:", error))
+    .finally(() => {
+      // Restore button visibility
+      if (captureButton) captureButton.style.display = "flex";
+      if (pipeSizeButton) pipeSizeButton.style.display = "flex";
+    });
+};
+
 
 
 
@@ -319,61 +353,56 @@ const App = () => {
   // console.log(typeCount)
   let cumulativeSum= 0;
 
-  // useEffect(() => {
-  //   // Append a cache-busting query parameter
-  //   const updatedUrl = `${'https://alvision-count.s3.ap-south-1.amazonaws.com/count/DrawTest/original/2025/03/original_9a470183-4736-456e-a0ba-436a11dc8825.png'}?nocache=${Date.now()}`;
-  //   setUniqueImageUrl(updatedUrl);
-  // }, []); // Runs whenever imageUrl changes
 
-  const [imageLoaded, setImageLoaded] = useState(false);
+//   const [imageLoaded, setImageLoaded] = useState(false);
 
-useEffect(() => {
-  const imgElement = document.getElementById("imageToCapture");
-  if (imgElement) {
-    if (imgElement.complete) {
-      setImageLoaded(true);
-    } else {
-      imgElement.onload = () => setImageLoaded(true);
-      imgElement.onerror = () => console.error("Image failed to load");
-    }
-  }
-}, []);
+// useEffect(() => {
+//   const imgElement = document.getElementById("imageToCapture");
+//   if (imgElement) {
+//     if (imgElement.complete) {
+//       setImageLoaded(true);
+//     } else {
+//       imgElement.onload = () => setImageLoaded(true);
+//       imgElement.onerror = () => console.error("Image failed to load");
+//     }
+//   }
+// }, []);
 
-const downloadImage = () => {
-  if (!imageLoaded) {
-    alert("Please wait, the image is still loading...");
-    return;
-  }
+// const downloadImage = () => {
+//   if (!imageLoaded) {
+//     alert("Please wait, the image is still loading...");
+//     return;
+//   }
 
-  const element = document.getElementById("captureArea");
-  const captureButton = document.getElementById("captureButton");
-  const pipeSizeButton = document.getElementById("pipeSizeButton");
+//   const element = document.getElementById("captureArea");
+//   const captureButton = document.getElementById("captureButton");
+//   const pipeSizeButton = document.getElementById("pipeSizeButton");
 
-  // Hide buttons before capturing
-  if (captureButton) captureButton.style.display = "none";
-  if (pipeSizeButton) pipeSizeButton.style.display = "none";
+//   // Hide buttons before capturing
+//   if (captureButton) captureButton.style.display = "none";
+//   if (pipeSizeButton) pipeSizeButton.style.display = "none";
 
-  html2canvas(element, { logging: true, useCORS: true, backgroundColor: "white", scale: 2 })
-    .then((canvas) => {
-      const dataUrl = canvas.toDataURL("image/png");
+//   html2canvas(element, { logging: true, useCORS: true, backgroundColor: "white", scale: 2 })
+//     .then((canvas) => {
+//       const dataUrl = canvas.toDataURL("image/png");
 
-      // Open the image in a new tab
-      const newTab = window.open();
-      newTab.document.write('<img src="' + dataUrl + '" />');
+//       // Open the image in a new tab
+//       const newTab = window.open();
+//       newTab.document.write('<img src="' + dataUrl + '" />');
 
-      // Optional: Allow download
-      const link = document.createElement("a");
-      link.href = dataUrl;
-      link.download = "downloaded-image.png";
-      link.click();
-    })
-    .catch((error) => console.error("Error generating image:", error))
-    .finally(() => {
-      // Restore button visibility
-      if (captureButton) captureButton.style.display = "flex";
-      if (pipeSizeButton) pipeSizeButton.style.display = "flex";
-    });
-};
+//       // Optional: Allow download
+//       const link = document.createElement("a");
+//       link.href = dataUrl;
+//       link.download = "downloaded-image.png";
+//       link.click();
+//     })
+//     .catch((error) => console.error("Error generating image:", error))
+//     .finally(() => {
+//       // Restore button visibility
+//       if (captureButton) captureButton.style.display = "flex";
+//       if (pipeSizeButton) pipeSizeButton.style.display = "flex";
+//     });
+// };
   
   return (
     <div id="captureArea" >
@@ -433,7 +462,7 @@ const downloadImage = () => {
 id="imageToCapture"
 src={"https://alvision-count.s3.ap-south-1.amazonaws.com/count/DrawTest/original/2025/03/original_9a470183-4736-456e-a0ba-436a11dc8825.png"} // Your image source
 onError={() => console.error("Image failed to load")}
-onLoad={() => setImageLoaded(true)}
+// onLoad={() => setImageLoaded(true)}
 // key={uniqueImageUrl}
 ref={imageRef}
 // src={uniqueImageUrl}
