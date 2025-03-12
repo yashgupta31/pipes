@@ -357,19 +357,39 @@ const App = () => {
 // };
 
 
+const waitForImagesToLoad = () => {
+  return new Promise((resolve) => {
+    const images = document.querySelectorAll("img");
+    let loadedCount = 0;
+    images.forEach((img) => {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          if (loadedCount === images.length) resolve();
+        };
+      }
+    });
+    if (loadedCount === images.length) resolve();
+  });
+};
+
 const downloadImage = async () => {
+  await waitForImagesToLoad(); // Ensure all images are loaded
+
   const element = document.body; // Capture entire page
 
-  // Ensure images have crossOrigin="anonymous"
   document.querySelectorAll("img").forEach((img) => {
-    img.crossOrigin = "anonymous";
+    if (!img.src.includes(window.location.origin)) {
+      img.crossOrigin = "anonymous";
+    }
   });
 
   const canvas = await html2canvas(element, {
-    useCORS: true,  // Allows cross-origin images
-    allowTaint: true, // Allows tainted (cross-origin) images
-    logging: false,
-    scale: 2, // Improves image quality
+    useCORS: true,
+    allowTaint: true,
+    scale: 2,
   });
 
   const imgData = canvas.toDataURL("image/png");
