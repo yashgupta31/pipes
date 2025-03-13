@@ -4016,6 +4016,7 @@ const App = () => {
   const [count, setCount] = useState(2063);  // Set initial count based on existing boxes
   const [typeCount, setTypeCount]= useState({1: 0, 2: 0, 3: 0, 4: 0, 5: 0})
   const [pipeColor, setPipeColor]= useState(1)
+  const [imgSize, setImgSize]= useState(0.8)
   const imageRef = useRef(null);
   // const canvasRef = useRef(null);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
@@ -4285,7 +4286,7 @@ const downloadImage = async () => {
   const canvas = await html2canvas(element, {
     useCORS: true,
     allowTaint: true,
-    scale: 0.8,
+    scale: imgSize,
   });
 
   const imgData = canvas.toDataURL("image/png");
@@ -4302,6 +4303,21 @@ const downloadImage = async () => {
   link.click();
   document.body.removeChild(link);
 };
+
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth < 1200) {
+      setImgSize(2);
+    } else {
+      setImgSize(0.8);
+    }
+  };
+
+  handleResize(); // Check size initially
+  window.addEventListener("resize", handleResize); // Listen for resize events
+
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
 
 
