@@ -2418,6 +2418,10 @@ const App = () => {
     link.click();
     document.body.removeChild(link);
     setLoading(false)
+    setTimeout(()=>{
+      alert("Image captured successfully!");
+    }, 500)
+    
   };
 
   useEffect(() => {
@@ -2541,6 +2545,80 @@ const App = () => {
   //     });
   // };
 
+  const divRef = useRef(null);
+  const draggingRef = useRef(false);
+  const startPos = useRef({ x: 0, y: 0 });
+
+  // **Initialize in Center (Vertically)**
+  const [position, setPosition] = useState({
+    x: window.innerWidth - 60, // Right-side position
+    y: window.innerHeight / 2 - 90, // Center vertically
+  });
+
+  // **Keep div inside viewport on resize**
+  useEffect(() => {
+    const handleResize = () => {
+      setPosition((prevPos) => ({
+        x: Math.min(prevPos.x, window.innerWidth - 60),
+        y: Math.min(prevPos.y, window.innerHeight - 180),
+      }));
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // **Mouse Events**
+  const handleMouseDown = (e) => {
+    draggingRef.current = true;
+    startPos.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseMove = (e) => {
+    if (!draggingRef.current || !divRef.current) return;
+
+    const dx = e.clientX - startPos.current.x;
+    const dy = e.clientY - startPos.current.y;
+
+    requestAnimationFrame(() => {
+      setPosition((prev) => ({
+        x: Math.min(Math.max(prev.x + dx, 0), window.innerWidth - 60),
+        y: Math.min(Math.max(prev.y + dy, 0), window.innerHeight - 180),
+      }));
+    });
+
+    startPos.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseUp = () => {
+    draggingRef.current = false;
+  };
+
+  // **Touch Events (For Mobile)**
+  const handleTouchStart = (e) => {
+    draggingRef.current = true;
+    startPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+
+  const handleTouchMove = (e) => {
+    if (!draggingRef.current || !divRef.current) return;
+
+    const dx = e.touches[0].clientX - startPos.current.x;
+    const dy = e.touches[0].clientY - startPos.current.y;
+
+    requestAnimationFrame(() => {
+      setPosition((prev) => ({
+        x: Math.min(Math.max(prev.x + dx, 0), window.innerWidth - 60),
+        y: Math.min(Math.max(prev.y + dy, 0), window.innerHeight - 180),
+      }));
+    });
+
+    startPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+
+  const handleTouchEnd = () => {
+    draggingRef.current = false;
+  };
   
   return (
     <div>
@@ -2625,6 +2703,7 @@ const App = () => {
           Date - {new Date("2025-03-06T12:42:31.864629").toLocaleString()}
         </span>
         <div
+        ref={divRef}
           id="pipeSizeButton"
           style={{
             display: "flex",
@@ -2634,10 +2713,23 @@ const App = () => {
             width: "3rem",
             height: "18rem",
             position: "fixed",
-            bottom: "6rem",
-            right: "0.4rem",
+            // bottom: "6rem",
+            // right: "0.4rem",
+            left: `${position.x}px`,
+        top: `${position.y}px`,
+        cursor: "grab",
             zIndex: "999",
+            touchAction: "none"
+
           }}
+
+          onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp} // Stop dragging if cursor leaves
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
         >
           <div
             className="each-pipesizeButton"
