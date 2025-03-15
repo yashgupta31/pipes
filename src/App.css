@@ -12,6 +12,10 @@
   background: rgba(0, 0, 255, 0.3);
 } */
 
+#captureArea{
+  padding: 0.5rem 4rem
+}
+
 .pipecount-date-container{
   flex-direction: row;
 }
@@ -21,7 +25,7 @@
 }
 
 .capture-date{
-  font-size: 1.7rem;
+  font-size: 1.2rem;
 }
 
 .type-wise-count{
@@ -29,9 +33,10 @@
 }
 
 .each-type-count{
-  width: 20rem;
-  margin-right: 0.4rem;
-  margin-top: 0.3rem;
+  width: 22rem;
+  /* margin-right: 0.4rem;
+  margin-top: 0.3rem; */
+  margin: auto;
   
 }
 
@@ -42,6 +47,14 @@
 
 .logo{
   width: 20rem
+}
+
+td{
+  padding: 0.7rem 1rem;
+}
+
+#client-logo{
+  
 }
 
 @media screen and (max-width: 1600px){
@@ -124,6 +137,9 @@
 
 @media screen and (max-width: 480px){
 
+  #captureArea{
+    padding: 0.5rem 3rem
+  }
   .pipecount-date-container{
     flex-direction: column;
   }
@@ -136,6 +152,11 @@
     width: 49%;
     font-size: 0.9rem;
     /* margin-bottom: 0.4rem; */
+  }
+
+  #pipeSizeButton{
+    top: 0;
+    flex-direction: row;
   }
 }
 
