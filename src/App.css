@@ -158,6 +158,10 @@ td{
     top: 0;
     flex-direction: row;
   }
+
+  td{
+    padding: 0.4rem 0.6rem;
+  }
 }
 
 /* @media screen and (max-width: 480px){
